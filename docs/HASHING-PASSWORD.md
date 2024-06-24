@@ -123,7 +123,7 @@ const hashPassword = async (req, res, next) => {
   - Lorsqu'un nouvel utilisateur est enregistré, le middleware est appelé pour hacher le mot de passe avant de le stocker en base de données.
 
 ```js
-router.post("/users", hashPassword, userControllers.add);
+router.post("/users", hashPassword, userActions.add);
 ```
 
 ### Modifications sur la connexion
