@@ -1,6 +1,9 @@
 // Import access to database tables
-const tables = require("../../database/tables");
+const jwt = require("jsonwebtoken");
 const { verifyPassword } = require("../services/auth");
+const tables = require("../../database/tables");
+
+const { APP_SECRET } = process.env;
 
 const login = async (req, res, next) => {
   try {
@@ -11,7 +14,15 @@ const login = async (req, res, next) => {
       ? await verifyPassword(user.password, req.body.password)
       : false;
     if (verified) {
-      res.json(user);
+      delete user.password;
+
+      const token = jwt.sign(user, APP_SECRET);
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        })
+        .json(token);
     } else {
       // Respond with the user in JSON format (but without the hashed password)
 

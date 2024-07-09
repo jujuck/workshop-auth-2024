@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
+import connexion from "../services/connexion";
+
 function Login() {
   // Références pour les champs email et mot de passe
   const emailRef = useRef();
@@ -17,17 +19,10 @@ function Login() {
 
     try {
       // Appel à l'API pour demander une connexion
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/login`,
-        {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-          }),
-        }
-      );
+      const response = await connexion.post(`/api/login`, {
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      });
 
       // Redirection vers la page de connexion si la création réussit
       if (response.status === 200) {

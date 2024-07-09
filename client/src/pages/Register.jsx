@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import connexion from "../services/connexion";
+
 function Register() {
   // Référence pour le champ email
   const emailRef = useRef();
@@ -28,17 +30,10 @@ function Register() {
 
     try {
       // Appel à l'API pour créer un nouvel utilisateur
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/users`,
-        {
-          method: "post",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: emailRef.current.value,
-            password,
-          }),
-        }
-      );
+      const response = await connexion.post("/api/users", {
+        email: emailRef.current.value,
+        password,
+      });
 
       // Redirection vers la page de connexion si la création réussit
       if (response.status === 201) {
